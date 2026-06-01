@@ -74,6 +74,8 @@ const horaireController = require('../controllers/horaires/horaire.controller');
 const notificationController = require('../controllers/notifications/notification.controller');
 const reactionController = require('../controllers/reactions/reaction.controller');
 const tarifController = require('../controllers/tarifs/tarif.controller');
+const contactPatientController = require('../controllers/contact_patient/contact_patient.controller');
+const rendezVousController = require('../controllers/rendez_vous/rendez_vous.controller');
 
 const { authenticateToken } = require('../middleware/auth.middleware');
 
@@ -90,6 +92,11 @@ const addCrudRoutes = (path, controller) => {
 router.post('/register', register);
 router.post('/login', login);
 router.post('/refresh', refresh);
+
+// lignes pour les demandes de contact et ce qui prend un rendez-vous
+router.post('/contact-patient', contactPatientController.createPublic);
+router.post('/rendez-vous', rendezVousController.createPublic);
+router.get('/rendez-vous/taken-slots', rendezVousController.getTakenSlots);
 
 // Routes protégées
 router.get('/profile', authenticateToken, getProfile);
