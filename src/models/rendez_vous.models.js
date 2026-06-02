@@ -9,5 +9,6 @@ module.exports = buildModel('rendez_vous', [
     'Motif_consultation',
     'info_supplementaire',
     'date_creneau',
-    'heure_creneau'
+    'heure_creneau',
+    'status'
 ]);

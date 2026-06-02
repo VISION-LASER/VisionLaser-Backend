@@ -184,8 +184,134 @@ const sendAppointmentEmails = async (appointmentData) => {
     }
 };
 
+// Email de mise à jour de statut au patient
+const sendStatusUpdateEmail = async (appointmentData) => {
+    const { patient, date, time, status } = appointmentData;
+
+    // Formater la date
+    const dateFormatted = new Date(date + "T12:00:00").toLocaleDateString("fr-FR", {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+
+    // Déterminer le message selon le statut
+    let statusMessage = '';
+    let statusColor = '';
+    let statusIcon = '';
+    
+    switch (status) {
+        case 'confirmed':
+            statusMessage = 'votre rendez-vous a été confirmé';
+            statusColor = '#2e7d32';
+            statusIcon = '✅';
+            break;
+        case 'refused':
+            statusMessage = 'votre rendez-vous a été refusé';
+            statusColor = '#c62828';
+            statusIcon = '❌';
+            break;
+        case 'cancelled':
+            statusMessage = 'votre rendez-vous a été annulé';
+            statusColor = '#757575';
+            statusIcon = '⚠️';
+            break;
+        default:
+            statusMessage = 'le statut de votre rendez-vous a été modifié';
+            statusColor = '#C9A84C';
+            statusIcon = '📝';
+    }
+
+    const mailOptions = {
+        from: process.env.SMTP_EMAIL || 'onjaniainamapionona@gmail.com',
+        to: patient.email,
+        subject: `${statusIcon} Mise à jour de votre rendez-vous - Centre Vision Laser`,
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #0C2340, #0f2e52); padding: 20px; text-align: center;">
+                    <h2 style="color: #C9A84C; margin: 0;">Centre Vision Laser</h2>
+                    <p style="color: white; margin: 5px 0 0;">Mise à jour de votre demande</p>
+                </div>
+                
+                <div style="padding: 20px; border: 1px solid #e0e0e0; border-top: none;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 48px;">${statusIcon}</div>
+                        <h3 style="color: ${statusColor}; margin: 10px 0 0;">${status === 'confirmed' ? 'Rendez-vous confirmé' : status === 'refused' ? 'Rendez-vous refusé' : 'Rendez-vous annulé'}</h3>
+                    </div>
+                    
+                    <p style="color: #333; line-height: 1.6;">
+                        Bonjour <strong>${patient.firstName} ${patient.lastName}</strong>,
+                    </p>
+                    
+                    <p style="color: #333; line-height: 1.6;">
+                        Nous vous informons que <strong style="color: ${statusColor};">${statusMessage}</strong>.
+                    </p>
+                    
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; text-align: center; margin: 20px 0;">
+                        <p style="margin: 0; color: #0C2340;">
+                            <strong style="font-size: 18px;">${dateFormatted}</strong>
+                        </p>
+                        <p style="margin: 5px 0 0; color: #C9A84C;">
+                            <strong>à ${time}</strong>
+                        </p>
+                    </div>
+                    
+                    ${status === 'confirmed' ? `
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <p style="color: #2e7d32; margin: 0; font-size: 14px;">
+                            <strong>📍 Informations pratiques</strong><br>
+                            Centre Vision Laser<br>
+                            123 Avenue de la Vision, 75000 Paris<br>
+                            Tel: 01 23 45 67 89<br>
+                            Parking gratuit disponible
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    ${status === 'refused' ? `
+                    <div style="background: #ffebee; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <p style="color: #c62828; margin: 0; font-size: 14px;">
+                            <strong>💡 Que faire ?</strong><br>
+                            Veuillez nous contacter directement au 01 23 45 67 89 pour trouver une nouvelle date.
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    ${status === 'cancelled' ? `
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <p style="color: #757575; margin: 0; font-size: 14px;">
+                            <strong>📅 Besoin d'un nouveau rendez-vous ?</strong><br>
+                            Vous pouvez prendre un nouveau rendez-vous sur notre site ou nous contacter.
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    <p style="color: #666; font-size: 12px; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
+                        Pour toute question, n'hésitez pas à nous contacter au 01 23 45 67 89.
+                        <br><br>
+                        Cet email est un message automatique. Merci de ne pas y répondre.
+                    </p>
+                </div>
+            </div>
+        `,
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email de mise à jour de statut envoyé:', info.messageId);
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        console.error('Erreur envoi email statut:', error);
+        throw error;
+    }
+};
+
+
+
 module.exports = {
     sendAppointmentNotificationToAdmin,
     sendAppointmentConfirmationToUser,
     sendAppointmentEmails,
+    sendStatusUpdateEmail
 };
