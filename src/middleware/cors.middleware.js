@@ -4,7 +4,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://soatrans-frontend.vercel.app",
+    "https://vision-laser.vercel.app",
   ],
   credentials: true,
   optionsSuccessStatus: 200,

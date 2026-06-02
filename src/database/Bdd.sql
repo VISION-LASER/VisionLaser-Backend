@@ -2,6 +2,8 @@ CREATE TABLE `actualites` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `titre` varchar(255) NOT NULL,
   `description` text NOT NULL,
+  `image_actualite` varchar(500) DEFAULT NULL,
+  `video_actualite` varchar(500) DEFAULT NULL,
   `date_publication` date DEFAULT NULL,
   `admin_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -37,6 +39,18 @@ CREATE TABLE `commentaires` (
   `date_commentaire` datetime DEFAULT NULL,
   `actualite_id` bigint(20) UNSIGNED NOT NULL,
   `patient_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `contact_patient` (
+  `id` int(11) NOT NULL,
+  `Nom` varchar(100) NOT NULL,
+  `Prenom` varchar(100) NOT NULL,
+  `Telephone` varchar(20) NOT NULL,
+  `Email` varchar(150) NOT NULL,
+  `Message` text NOT NULL,
+  `date_creation` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -106,6 +120,22 @@ CREATE TABLE `reactions` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `rendez_vous` (
+  `id` int(11) NOT NULL,
+  `Nom` varchar(100) NOT NULL,
+  `Prenom` varchar(100) NOT NULL,
+  `Email` varchar(150) NOT NULL,
+  `Telephone` varchar(20) NOT NULL,
+  `Date_naissance` date DEFAULT NULL,
+  `Motif_consultation` varchar(100) NOT NULL,
+  `info_supplementaire` text,
+  `date_creneau` date NOT NULL,
+  `heure_creneau` varchar(10) NOT NULL,
+  `status` enum('pending','confirmed','refused','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 CREATE TABLE `tarifs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `technique` varchar(150) NOT NULL,
@@ -133,6 +163,9 @@ ALTER TABLE `commentaires`
   ADD KEY `fk_commentaires_actualite` (`actualite_id`),
   ADD KEY `fk_commentaires_patient` (`patient_id`);
 
+ALTER TABLE `contact_patient`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `equipements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_equipements_admin` (`admin_id`);
@@ -158,42 +191,51 @@ ALTER TABLE `reactions`
   ADD KEY `fk_reactions_actualite` (`actualite_id`),
   ADD KEY `fk_reactions_patient` (`patient_id`);
 
+ALTER TABLE `rendez_vous`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `tarifs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_tarifs_admin` (`admin_id`);
 
 ALTER TABLE `actualites`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 ALTER TABLE `admins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 ALTER TABLE `bilans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 ALTER TABLE `commentaires`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+ALTER TABLE `contact_patient`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 ALTER TABLE `equipements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 ALTER TABLE `faq`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 ALTER TABLE `horaires`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `notifications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 ALTER TABLE `patients`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `reactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+ALTER TABLE `rendez_vous`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 ALTER TABLE `tarifs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `actualites`
   ADD CONSTRAINT `fk_actualites_admin` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE;
