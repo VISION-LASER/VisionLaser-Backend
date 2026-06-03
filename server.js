@@ -1,4 +1,4 @@
-// require('dotenv').config();
+// require('dotenv').config(); 
 // const corsMiddleware = require('./src/middleware/cors.middleware');
 // const connectDatabase = require('./src/config/connectDatabase');
 
@@ -45,6 +45,7 @@ const express = require('express');
 // ✅ AJOUTEZ CETTE LIGNE
 const userRoutes = require('./src/routes/user.routes');
 const uploadRoutes = require('./src/routes/upload.routes');  // pour upload image
+const dashboardRoutes = require('./src/routes/dashboard.routes');
 
 const app = express();
 
@@ -69,6 +70,7 @@ connectDatabase()
 // ✅ AJOUTEZ CES LIGNES (routes d'authentification)
 app.use('/api/users', userRoutes);
 app.use('/api/users', uploadRoutes); // pour upload image
+app.use('/api/dashboard', dashboardRoutes);
 
 // Route test
 app.get('/', (req, res) => {
