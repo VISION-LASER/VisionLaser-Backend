@@ -146,6 +146,20 @@ CREATE TABLE `tarifs` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE IF NOT EXISTS visits (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  session_id  VARCHAR(64)  NOT NULL,          
+  page        VARCHAR(255) NOT NULL,           
+  region      VARCHAR(100) DEFAULT 'Inconnue',
+  device      VARCHAR(50)  DEFAULT 'Inconnu', 
+  language    VARCHAR(10)  DEFAULT 'fr',
+  visited_at  DATETIME     NOT NULL,
+
+  INDEX idx_session   (session_id),
+  INDEX idx_page      (page),
+  INDEX idx_visited   (visited_at)
+);
+
 ALTER TABLE `actualites`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_actualites_admin` (`admin_id`);
