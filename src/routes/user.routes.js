@@ -44,6 +44,10 @@ router.get('/actualites/:id', actualiteController.getById);
 router.get('/reactions/count', reactionController.countReactions);
 router.get('/commentaires/count', commentaireController.countCommentaires);
 
+// ROUTES PUBLIQUES POUR FAQ (accessibles sans authentification)
+router.get('/faq', faqController.getAll);
+router.get('/faq/:id', faqController.getById);
+
 // lignes pour les demandes de contact et ce qui prend un rendez-vous
 router.post('/contact-patient', contactPatientController.createPublic);
 router.post('/rendez-vous', rendezVousController.createPublic);
@@ -68,6 +72,9 @@ if (commentaireController.countCommentaires) {
     router.get('/commentaires/count', authenticateToken, commentaireController.countCommentaires);
 }
 
+// Route pour le compteur de notifications non lues
+router.get('/contact-patient/unread/count', authenticateToken, contactPatientController.getUnreadCount);
+
 // Routes CRUD
 addCrudRoutes('/actualites', actualiteController);
 addCrudRoutes('/bilans', bilanController);
@@ -79,10 +86,104 @@ addCrudRoutes('/notifications', notificationController);
 addCrudRoutes('/reactions', reactionController);
 addCrudRoutes('/tarifs', tarifController);
 addCrudRoutes('/rendez-vous', rendezVousController);
+addCrudRoutes('/contact-patient', contactPatientController);
 
 // Route spécifique pour mettre à jour le statut (AJOUTER CETTE LIGNE)
 router.put('/rendez-vous/:id/status', authenticateToken, rendezVousController.updateStatus);
 
+// Route spécifique pour marquer comme lu
+router.put('/contact-patient/:id/read', authenticateToken, contactPatientController.markAsRead);
+
 module.exports = router;
 
+// const express = require('express');
+// const router = express.Router();
+
+// // IMPORTS AUTH
+// const register = require('../controllers/auth/register.controller');
+// const login = require('../controllers/auth/login.controller');
+// const refresh = require('../controllers/auth/refresh.controller');
+// const getProfile = require('../controllers/auth/profile.controller');
+
+// // IMPORTS CONTROLLERS
+// const actualiteController = require('../controllers/actualites/actualite.controller');
+// const bilanController = require('../controllers/bilans/bilan.controller');
+// const commentaireController = require('../controllers/commentaires/commentaire.controller');
+// const equipementController = require('../controllers/equipements/equipement.controller');
+// const faqController = require('../controllers/faq/faq.controller');
+// const horaireController = require('../controllers/horaires/horaire.controller');
+// const reactionController = require('../controllers/reactions/reaction.controller');
+// const tarifController = require('../controllers/tarifs/tarif.controller');
+// const contactPatientController = require('../controllers/contact_patient/contact_patient.controller');
+// const rendezVousController = require('../controllers/rendez_vous/rendez_vous.controller');
+
+// const { authenticateToken } = require('../middleware/auth.middleware');
+
+// // Fonction helper pour ajouter les routes CRUD en toute sécurité
+// const addCrudRoutes = (path, controller) => {
+//     // Vérifier que controller existe et que chaque méthode est une fonction
+//     if (controller && typeof controller.getAll === 'function') {
+//         router.get(path, authenticateToken, controller.getAll);
+//     }
+//     if (controller && typeof controller.getById === 'function') {
+//         router.get(`${path}/:id`, authenticateToken, controller.getById);
+//     }
+//     if (controller && typeof controller.create === 'function') {
+//         router.post(path, authenticateToken, controller.create);
+//     }
+//     if (controller && typeof controller.update === 'function') {
+//         router.put(`${path}/:id`, authenticateToken, controller.update);
+//     }
+//     if (controller && typeof controller.remove === 'function') {
+//         router.delete(`${path}/:id`, authenticateToken, controller.remove);
+//     }
+// };
+
+// // ==================== ROUTES PUBLIQUES ====================
+// router.post('/register', register);
+// router.post('/login', login);
+// router.post('/refresh', refresh);
+
+// // Routes publiques GET pour les actualités
+// router.get('/actualites', actualiteController.getAll);
+// router.get('/actualites/:id', actualiteController.getById);
+
+// // Routes publiques pour les réactions et commentaires
+// if (reactionController.countReactions) {
+//     router.get('/reactions/count', reactionController.countReactions);
+// }
+// if (commentaireController.countCommentaires) {
+//     router.get('/commentaires/count', commentaireController.countCommentaires);
+// }
+
+// // Routes publiques pour les demandes de contact et rendez-vous
+// router.post('/contact-patient', contactPatientController.createPublic);
+// router.post('/rendez-vous', rendezVousController.createPublic);
+// router.get('/rendez-vous/taken-slots', rendezVousController.getTakenSlots);
+
+// // ==================== ROUTES PROTÉGÉES ====================
+// router.get('/profile', authenticateToken, getProfile);
+
+// // Route pour le compteur de notifications non lues
+// router.get('/contact-patient/unread/count', authenticateToken, contactPatientController.getUnreadCount);
+
+// // Route spécifique pour marquer comme lu
+// router.put('/contact-patient/:id/read', authenticateToken, contactPatientController.markAsRead);
+
+// // Route spécifique pour mettre à jour le statut d'un rendez-vous
+// router.put('/rendez-vous/:id/status', authenticateToken, rendezVousController.updateStatus);
+
+// // ==================== ROUTES CRUD ====================
+// addCrudRoutes('/actualites', actualiteController);
+// addCrudRoutes('/bilans', bilanController);
+// addCrudRoutes('/commentaires', commentaireController);
+// addCrudRoutes('/equipements', equipementController);
+// addCrudRoutes('/faq', faqController);
+// addCrudRoutes('/horaires', horaireController);
+// addCrudRoutes('/reactions', reactionController);
+// addCrudRoutes('/tarifs', tarifController);
+// addCrudRoutes('/rendez-vous', rendezVousController);
+// addCrudRoutes('/contact-patient', contactPatientController);
+
+// module.exports = router;
 
