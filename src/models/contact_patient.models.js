@@ -5,5 +5,7 @@ module.exports = buildModel('contact_patient', [
     'Prenom',
     'Telephone',
     'Email',
-    'Message'
+    'Message',
+    'faq',
+    'is_read'
 ]);
