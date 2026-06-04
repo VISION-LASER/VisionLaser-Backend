@@ -50,6 +50,8 @@ CREATE TABLE `contact_patient` (
   `Telephone` varchar(20) NOT NULL,
   `Email` varchar(150) NOT NULL,
   `Message` text NOT NULL,
+  `faq` json DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
   `date_creation` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -68,7 +70,7 @@ CREATE TABLE `equipements` (
 CREATE TABLE `faq` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `question` text NOT NULL,
-  `reponse_faq` text NOT NULL,
+  `reponse_faq` json DEFAULT NULL,
   `admin_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -146,19 +148,15 @@ CREATE TABLE `tarifs` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE IF NOT EXISTS visits (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  session_id  VARCHAR(64)  NOT NULL,          
-  page        VARCHAR(255) NOT NULL,           
-  region      VARCHAR(100) DEFAULT 'Inconnue',
-  device      VARCHAR(50)  DEFAULT 'Inconnu', 
-  language    VARCHAR(10)  DEFAULT 'fr',
-  visited_at  DATETIME     NOT NULL,
-
-  INDEX idx_session   (session_id),
-  INDEX idx_page      (page),
-  INDEX idx_visited   (visited_at)
-);
+CREATE TABLE `visits` (
+  `id` int(11) NOT NULL,
+  `session_id` varchar(64) NOT NULL,
+  `page` varchar(255) NOT NULL,
+  `region` varchar(100) DEFAULT 'Inconnue',
+  `device` varchar(50) DEFAULT 'Inconnu',
+  `language` varchar(10) DEFAULT 'fr',
+  `visited_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `actualites`
   ADD PRIMARY KEY (`id`),
@@ -212,6 +210,12 @@ ALTER TABLE `tarifs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_tarifs_admin` (`admin_id`);
 
+ALTER TABLE `visits`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_session` (`session_id`),
+  ADD KEY `idx_page` (`page`),
+  ADD KEY `idx_visited` (`visited_at`);
+
 ALTER TABLE `actualites`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
@@ -225,13 +229,13 @@ ALTER TABLE `commentaires`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `contact_patient`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 ALTER TABLE `equipements`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 ALTER TABLE `faq`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 ALTER TABLE `horaires`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
@@ -246,10 +250,13 @@ ALTER TABLE `reactions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 ALTER TABLE `rendez_vous`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 ALTER TABLE `tarifs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+ALTER TABLE `visits`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `actualites`
   ADD CONSTRAINT `fk_actualites_admin` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE;
