@@ -9,7 +9,7 @@ require('dotenv').config();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.SMTP_EMAIL || 'onjaniainamapionona@gmail.com',
+        user: process.env.SMTP_EMAIL || 'dev.ariamada@gmail.com',
         pass: process.env.SMTP_PASSWORD, // Vous devez ajouter cette variable dans .env
     },
 });
@@ -19,8 +19,8 @@ const sendAppointmentNotificationToAdmin = async (appointmentData) => {
     const { patient, date, time } = appointmentData;
 
     const mailOptions = {
-        from: process.env.SMTP_EMAIL || 'onjaniainamapionona@gmail.com',
-        to: 'onjaniainamapionona@gmail.com',
+        from: process.env.SMTP_EMAIL || 'dev.ariamada@gmail.com',
+        to: 'dev.ariamada@gmail.com',
         subject: '🔔 Nouveau rendez-vous - Centre Vision Laser',
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -100,7 +100,7 @@ const sendAppointmentConfirmationToUser = async (appointmentData) => {
     });
 
     const mailOptions = {
-        from: process.env.SMTP_EMAIL || 'onjaniainamapionona@gmail.com',
+        from: process.env.SMTP_EMAIL || 'dev.ariamada@gmail.com',
         to: patient.email,
         subject: '✅ Confirmation de votre rendez-vous - Centre Vision Laser',
         html: `
@@ -142,14 +142,14 @@ const sendAppointmentConfirmationToUser = async (appointmentData) => {
                         <p style="color: #2e7d32; margin: 0; font-size: 14px;">
                             <strong>📍 Informations pratiques</strong><br>
                             Centre Vision Laser<br>
-                            123 Avenue de la Vision, 75000 Paris<br>
-                            Tel: 01 23 45 67 89<br>
+                            VISION LASER, Polyclinique du Val de Sambre Rte de Mons 162, 59600 Maubeuge<br>
+                            Tel: +33 7 59 50 71 84<br>
                             Parking gratuit disponible
                         </p>
                     </div>
                     
                     <p style="color: #666; font-size: 12px; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
-                        Pour toute modification ou annulation, merci de nous contacter directement au 01 23 45 67 89.
+                        Pour toute modification ou annulation, merci de nous contacter directement au +33 7 59 50 71 84.
                         <br><br>
                         Cet email est un accusé de réception automatique. Merci de ne pas y répondre.
                     </p>
@@ -224,7 +224,7 @@ const sendStatusUpdateEmail = async (appointmentData) => {
     }
 
     const mailOptions = {
-        from: process.env.SMTP_EMAIL || 'onjaniainamapionona@gmail.com',
+        from: process.env.SMTP_EMAIL || 'dev.ariamada@gmail.com',
         to: patient.email,
         subject: `${statusIcon} Mise à jour de votre rendez-vous - Centre Vision Laser`,
         html: `
@@ -262,8 +262,8 @@ const sendStatusUpdateEmail = async (appointmentData) => {
                         <p style="color: #2e7d32; margin: 0; font-size: 14px;">
                             <strong>📍 Informations pratiques</strong><br>
                             Centre Vision Laser<br>
-                            123 Avenue de la Vision, 75000 Paris<br>
-                            Tel: 01 23 45 67 89<br>
+                            VISION LASER, Polyclinique du Val de Sambre Rte de Mons 162, 59600 Maubeuge<br>
+                            Tel: +33 7 59 50 71 84<br>
                             Parking gratuit disponible
                         </p>
                     </div>
@@ -273,7 +273,7 @@ const sendStatusUpdateEmail = async (appointmentData) => {
                     <div style="background: #ffebee; padding: 15px; border-radius: 10px; margin: 20px 0;">
                         <p style="color: #c62828; margin: 0; font-size: 14px;">
                             <strong>💡 Que faire ?</strong><br>
-                            Veuillez nous contacter directement au 01 23 45 67 89 pour trouver une nouvelle date.
+                            Veuillez nous contacter directement au +33 7 59 50 71 84 pour trouver une nouvelle date.
                         </p>
                     </div>
                     ` : ''}
@@ -288,7 +288,7 @@ const sendStatusUpdateEmail = async (appointmentData) => {
                     ` : ''}
                     
                     <p style="color: #666; font-size: 12px; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
-                        Pour toute question, n'hésitez pas à nous contacter au 01 23 45 67 89.
+                        Pour toute question, n'hésitez pas à nous contacter au +33 7 59 50 71 84.
                         <br><br>
                         Cet email est un message automatique. Merci de ne pas y répondre.
                     </p>
