@@ -123,8 +123,25 @@ const { db } = require('../../config/connectDatabase');
 // Récupérer tous les rendez-vous (AJOUT)
 const getAll = async (req, res) => {
     try {
-        const rendezVous = await rendezVousModel.findAll();
-        res.status(200).json({ success: true, data: rendezVous });
+        const [rows] = await db.query(`
+            SELECT 
+                id,
+                Nom,
+                Prenom,
+                Email,
+                Telephone,
+                Date_naissance,
+                Motif_consultation,
+                info_supplementaire,
+                DATE_FORMAT(date_creneau, '%Y-%m-%d') as date_creneau,
+                heure_creneau,
+                status,
+                created_at,
+                updated_at
+            FROM rendez_vous
+            ORDER BY date_creneau DESC, heure_creneau ASC
+        `);
+        res.status(200).json({ success: true, data: rows });
     } catch (error) {
         console.error('Erreur getAll rendez-vous:', error);
         res.status(500).json({ success: false, message: error.message });
