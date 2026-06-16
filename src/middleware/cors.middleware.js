@@ -5,6 +5,7 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:3000",
     "https://vision-laser.vercel.app",
+    "https://visionlaser.eu/",
   ],
   credentials: true,
   optionsSuccessStatus: 200,
