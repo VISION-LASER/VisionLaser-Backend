@@ -51,6 +51,7 @@ router.get('/faq/:id', faqController.getById);
 // lignes pour les demandes de contact et ce qui prend un rendez-vous
 router.post('/contact-patient', contactPatientController.createPublic);
 router.post('/rendez-vous', rendezVousController.createPublic);
+router.post('/contact-patient/draft', contactPatientController.saveDraft);
 router.get('/rendez-vous/taken-slots', rendezVousController.getTakenSlots);
 
 // Routes protégées

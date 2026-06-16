@@ -361,5 +361,5 @@ module.exports = {
     update,
     remove,
     getTakenSlots,
-    updateStatus
+    updateStatus,
 };

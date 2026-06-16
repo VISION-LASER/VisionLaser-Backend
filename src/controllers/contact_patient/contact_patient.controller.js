@@ -118,9 +118,37 @@ const markAsRead = async (req, res) => {
     }
 };
 
+const saveDraft = async (req, res) => {
+    try {
+        const { draftId, firstName, lastName, phone } = req.body;
+
+        if (draftId) {
+            await db.query(
+                `UPDATE contact_patient SET Nom=?, Prenom=?, Telephone=?, updated_at=NOW()
+                 WHERE id=? AND Message=''`,
+                [lastName, firstName, phone, draftId]
+            );
+            return res.status(200).json({ success: true, data: { id: draftId } });
+        }
+
+        const [result] = await db.query(
+            `INSERT INTO contact_patient (Nom, Prenom, Telephone, Email, Message)
+             VALUES (?, ?, ?, '', '')`,
+            [lastName, firstName, phone]
+        );
+
+        res.status(200).json({ success: true, data: { id: result.insertId } });
+    } catch (error) {
+        console.error('Erreur saveDraft contact_patient:', error);
+        res.status(200).json({ success: false });
+    }
+};
+
+
 module.exports = {
     ...controller,
     createPublic,
     getUnreadCount,
-    markAsRead
+    markAsRead,
+    saveDraft
 };
