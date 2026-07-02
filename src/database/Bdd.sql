@@ -158,6 +158,20 @@ CREATE TABLE `visits` (
   `visited_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `devis` (
+  `id`          bigint(20) UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `civilite`    varchar(10)           DEFAULT NULL COMMENT 'M. | Mme',
+  `nomPrenom`   varchar(255)          NOT NULL COMMENT 'Nom et prénom fusionnés (formulaire public)',
+  `email`       varchar(150)          NOT NULL,
+  `telephone`   varchar(30)           DEFAULT NULL,
+  `status`      enum('pending','treated','cancelled')
+                                        NOT NULL DEFAULT 'pending'
+                                        COMMENT 'pending=en attente, treated=traité, cancelled=annulé',
+  `created_at`  timestamp             NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  timestamp             NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 ALTER TABLE `actualites`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_actualites_admin` (`admin_id`);
